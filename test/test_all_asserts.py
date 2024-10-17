@@ -1,5 +1,9 @@
 import unittest
 
+
+
+SERVER = 'server_B'
+
 class AllAssertsTest(unittest.TestCase):
     def test_assert_equal(self):
         self.assertEqual(10, 10)
@@ -36,3 +40,17 @@ class AllAssertsTest(unittest.TestCase):
             set_1,
             set_2
         )
+
+    
+    @unittest.skip('A new feature is in progress, it will be enabled later')
+    def test_skip(self):
+        self.assertEqual('Hola', 'chao')
+    
+
+    @unittest.skipIf(SERVER == 'server_B', 'Skipped due to the server is not connected')
+    def test_skip_if(self):
+        self.assertEqual(1000, 1000)
+
+    @unittest.expectedFailure
+    def test_expected_failure(self):
+        self.assertEqual(1000, 1000)
