@@ -1,3 +1,6 @@
+from src.exceptions import InsufficientFundsError
+
+
 class BankAccount:
     def __init__(self, balance=0, log_file=None):
         self.balance = balance
@@ -36,6 +39,6 @@ class BankAccount:
     def transfer(self, amount):
         if self.balance < amount:
             self._log_transaction("Insufficient funds")
-            raise  ValueError("Insufficient funds")
+            raise  InsufficientFundsError("Insufficient funds", amount)
         self.balance -= amount
         return self.balance
