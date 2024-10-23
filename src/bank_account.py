@@ -1,4 +1,6 @@
-from src.exceptions import InsufficientFundsError
+from src.exceptions import InsufficientFundsError, WithdrawalTimeRestrictionError
+
+from datetime import datetime
 
 
 class BankAccount:
@@ -23,6 +25,11 @@ class BankAccount:
 
 
     def withdraw(self, amount):
+        now = datetime.now()
+        if now.weekday() in [5, 6]:
+            raise WithdrawalTimeRestrictionError("Withdrawals are only allowed weekdays")
+        if now.hour < 8 or now.hour > 17:
+            raise WithdrawalTimeRestrictionError("Withdrawals are only allowed from 8am to 5pm")
         if amount > 0 and amount < self.balance:
             self.balance -= amount
             self._log_transaction(f"Withdrew {amount}. New balance: {self.balance}")

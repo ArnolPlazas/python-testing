@@ -1,7 +1,8 @@
 import unittest
 import os
+from unittest.mock import patch
 
-from src.exceptions import InsufficientFundsError
+from src.exceptions import InsufficientFundsError, WithdrawalTimeRestrictionError
 from src.bank_account import BankAccount
 
 class BankAccountTest(unittest.TestCase):
@@ -50,5 +51,36 @@ class BankAccountTest(unittest.TestCase):
     def test_withdraw_raises_error_when_insufficient_funds(self):
         with self.assertRaises(InsufficientFundsError):
             self.account.transfer(1001)
+    
+    @patch("src.bank_account.datetime")
+    def test_withdraw_during_bussines_hours(self, mock_datetime):
+        mock_datetime.now.return_value.hour = 10
+        new_balance = self.account.withdraw(100)
+        self.assertEqual(new_balance, 900)
+    
+
+    @patch("src.bank_account.datetime")
+    def test_withdraw_during_no_bussines_hours(self, mock_datetime):
+        mock_datetime.now.return_value.hour = 7
+        
+        with self.assertRaises(WithdrawalTimeRestrictionError):
+            self.account.withdraw(100)
+    
+
+    @patch("src.bank_account.datetime")
+    def test_withdraw_during_bussines_days(self, mock_datetime):
+        mock_datetime.now.return_value.weekday.return_value = 3
+        mock_datetime.now.return_value.hour = 8
+        new_balance = self.account.withdraw(100)
+        self.assertEqual(new_balance, 900)
+    
+    
+    @patch("src.bank_account.datetime")
+    def test_withdraw_during_no_bussines_days(self, mock_datetime):
+        mock_datetime.now.return_value.weekday.return_value = 6
+        mock_datetime.now.return_value.hour = 8
+        with self.assertRaises(WithdrawalTimeRestrictionError):
+            self.account.withdraw(100)
+
 
 
