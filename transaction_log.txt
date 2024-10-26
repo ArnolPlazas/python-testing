@@ -1,0 +1,12 @@
+created account
+Deposited 100. New balance: 1100
+created account
+Deposited 3000. New balance: 4000
+created account
+Deposited 4500. New balance: 5500
+created account
+Deposited 100. New balance: 1100
+created account
+Deposited 3000. New balance: 4000
+created account
+Deposited 4500. New balance: 5500
